@@ -7,5 +7,5 @@ setup(
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',
     url='https://github.com/khorevkp/KK_Tools',
-    install_requires=['pandas']
+    install_requires=['pandas', 'requests']
 )
