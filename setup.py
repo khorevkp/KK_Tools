@@ -6,6 +6,6 @@ setup(
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',
-    url='https://github.com/khorevkp/KK_Tools/',
+    url='https://github.com/khorevkp/KK_Tools',
     install_requires=['pandas']
 )
