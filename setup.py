@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='kktools',
-    version='1.0',
+    version='1.1',
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',
