@@ -29,7 +29,7 @@ def get_ecb_rates(currency, start_period):
     # please see description of request structure here: https://sdw-wsrest.ecb.europa.eu/help/
 
     entrypoint = 'https://sdw-wsrest.ecb.europa.eu/service/'
-    resource = 'data'  # The resource for data queries is always'data'
+    resource = 'data'  # The resource for data queries is always 'data'
     flowRef = 'EXR'  # Dataflow describing the data that needs to be returned,
                     # exchange rates in this case
     key = 'D.' + currency + '.EUR.SP00.A'  # Defining the dimension values, D stands for daily,
