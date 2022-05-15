@@ -58,3 +58,36 @@ def get_ecb_rates(currency, start_period):
     df.dropna(inplace=True)
 
     return df
+
+
+def get_last_ecb_rates():
+    # please see description of request structure here: https://sdw-wsrest.ecb.europa.eu/help/
+
+    entrypoint = 'https://sdw-wsrest.ecb.europa.eu/service/'
+    resource = 'data'  # The resource for data queries is always'data'
+    flowRef = 'EXR'  # Dataflow describing the data that needs to be returned,
+    # exchange rates in this case
+    key = 'D..EUR.SP00.A'  # Defining the dimension values, D stands for daily,
+    # followed by currency code (. -thus all currencies in that case), etc.
+    parameters = {'lastNObservations': 1}
+
+    request_url = entrypoint + resource + '/' + flowRef + '/' + key
+
+    # Make the HTTP request
+    response = requests.get(request_url, params=parameters)
+
+    xml_data = response.text  # the data returned is in XML format, so we need to parse it
+    root = ET.fromstring(xml_data)
+    rate_list = []
+
+    for child in root[1]:
+        rate_list.append((child[0][1].attrib['value'],
+                          child[2][0].attrib['value'], child[2][1].attrib['value']))
+
+    df = pd.DataFrame(rate_list)
+    df.columns = ['currency', 'date', 'rate_value']
+
+    df['rate_value'] = pd.to_numeric(df['rate_value'], errors='coerce')
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    return df
