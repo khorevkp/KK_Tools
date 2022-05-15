@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: kktools
-Version: 1.7
+Version: 1.8
 Summary: Tools for finance and treasury specialists
 Home-page: https://github.com/khorevkp/KK_Tools
 Author: Konstantin Khorev
@@ -19,7 +19,7 @@ This library provides python tools for finance and treasury specialists.
 
 ## Installation
 
-`pip install git+https://github.com/khorevkp/KK_Tools.git`
+`pip install kktools`
 
 ## Basic Usage
 
