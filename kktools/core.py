@@ -91,3 +91,31 @@ def get_last_ecb_rates():
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
     return df
+
+def dfs_to_excel(file_name, df_list, max_length=25):
+    with pd.ExcelWriter(file_name, engine='xlsxwriter', datetime_format='dd/mm/yyyy') as writer:
+
+        s = 1
+        workbook = writer.book
+        format_num = workbook.add_format({'num_format': '#,##0.00'})
+        format_date = workbook.add_format({'num_format': 'mm/dd/yyyy'})
+
+        for df in df_list:
+            worksheet_name = "Sheet" + str(s)
+            s = s + 1
+            df.to_excel(writer, sheet_name=worksheet_name)
+            worksheet = writer.sheets[worksheet_name]
+            worksheet.autofilter(0, 0, df.shape[0], df.shape[1])
+            k = 0
+            for column in list(df.columns):
+                series = df[column]
+                max_len = max((
+                    series.astype(str).map(len).max(),  # len of largest item
+                    len(str(series.name))  # len of column name/header
+                )) + 1  # adding a little extra space
+                max_len = min(max_len, max_length)  # we want to limit still the length of the column with max_length
+                if df.dtypes[column] == 'float64':
+                    worksheet.set_column(k, k, max_len, format_num)
+                else:
+                    worksheet.set_column(k, k, max_len)
+                k = k + 1
