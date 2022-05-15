@@ -5,7 +5,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='kktools',
-    version='1.7',
+    version='1.8',
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',

@@ -7,7 +7,7 @@ This library provides python tools for finance and treasury specialists.
 
 ## Installation
 
-`pip install git+https://github.com/khorevkp/KK_Tools.git`
+`pip install kktools`
 
 ## Basic Usage
 
