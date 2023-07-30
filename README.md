@@ -14,7 +14,7 @@ This library provides python tools for finance and treasury specialists.
 `get_last_ecb_rates()` - returns pandas dataframe with the latest valid ECB exchange rates for all published currencies.  
 `df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.  
 `dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.  
-`Camt` - class for parsing CAMT053 files (EOD bank statements, ISO2022 standard)
+`Camt` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard)
 
 ## Basic Usage
 
