@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: kktools
-Version: 2.1
+Version: 2.2
 Summary: Tools for finance and treasury specialists
 Home-page: https://github.com/khorevkp/KK_Tools
 Author: Konstantin Khorev
@@ -26,6 +26,7 @@ This library provides python tools for finance and treasury specialists.
 `get_last_ecb_rates()` - returns pandas dataframe with the latest valid ECB exchange rates for all published currencies.  
 `df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.  
 `dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.  
+`Camt` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard)
 
 ## Basic Usage
 
@@ -36,6 +37,17 @@ import kktools as kkt
 
 df = kkt.get_ecb_rates("GBP", "2000-01-01")
 kkt.df_to_excel("Historical_Rates.xlsx", df)
+```
+
+Parsing CAMT053 file and getting list of balances and list of all transactions:
+```
+import kktools as kkt
+
+camt = Camt(file_name) # to create an object of Camt class you need to pass path+file_name of the CAMT053 file to be processed
+camt.get_balances() # return pandas dataframe with all the balances (OPBD/CLBD/CLAV/PRCD/FWAV) for each statement in the file
+camt.get_transactions() # return pandas dataframe with all the transactions in the file.
+# For each balance and transaction the related statement will be designated by AccountId column
+
 ```
 
 ### License
