@@ -41,7 +41,7 @@ kkt.df_to_excel("Historical_Rates.xlsx", df)
 
 Parsing CAMT053 file and getting list of balances and list of all transactions:
 ```
-import kktools as kkt
+from kktools import Camt
 
 camt = Camt(file_name) # to create an object of Camt class you need to pass path+file_name of the CAMT053 file to be processed
 camt.get_balances() # return pandas dataframe with all the balances (OPBD/CLBD/CLAV/PRCD/FWAV) for each statement in the file
