@@ -1,7 +1,7 @@
 LICENSE
 README.md
 setup.py
-kktools/ISO200022.py
+kktools/ISO20022.py
 kktools/__init__.py
 kktools/core.py
 kktools.egg-info/PKG-INFO

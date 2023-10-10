@@ -15,6 +15,7 @@ This library provides python tools for finance and treasury specialists.
 `df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.  
 `dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.  
 `Camt` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard)
+`Pain001` - class for parsing PAIN001 files (payment initiation, ISO20022 standard)
 
 ## Basic Usage
 
