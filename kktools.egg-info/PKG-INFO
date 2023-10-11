@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: kktools
-Version: 3.1
+Version: 3.2
 Summary: Tools for finance and treasury specialists
 Home-page: https://github.com/khorevkp/KK_Tools
 Author: Konstantin Khorev
@@ -22,12 +22,12 @@ This library provides python tools for finance and treasury specialists.
 `pip install kktools`
 
 ## Realized Functionality
-`get_ecb_rates("CUR", "YYYY-MM-DD")` - returns pandas dataframe with historical values for a given currency ("CUR") starting from the given date.  
-`get_last_ecb_rates()` - returns pandas dataframe with the latest valid ECB exchange rates for all published currencies.  
-`df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.  
-`dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.  
-`Camt` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard)
-`Pain001` - class for parsing PAIN001 files (payment initiation, ISO20022 standard)
+`get_ecb_rates("CUR", "YYYY-MM-DD")` - returns pandas dataframe with historical values for a given currency ("CUR") starting from the given date.<br>
+`get_last_ecb_rates()` - returns pandas dataframe with the latest valid ECB exchange rates for all published currencies.<br>
+`df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.<br>
+`dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.<br>
+`Camt053` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard).<br>
+`Pain001` - class for parsing PAIN001 files (payment initiation, ISO20022 standard).
 
 ## Basic Usage
 
@@ -42,12 +42,11 @@ kkt.df_to_excel("Historical_Rates.xlsx", df)
 
 Parsing CAMT053 file and getting list of balances and list of all transactions:
 ```
-from kktools import Camt
+from kktools import Camt053
 
-camt = Camt(file_name) # to create an object of Camt class you need to pass path+file_name of the CAMT053 file to be processed
-camt.get_balances() # return pandas dataframe with all the balances (OPBD/CLBD/CLAV/PRCD/FWAV) for each statement in the file
-camt.get_transactions() # return pandas dataframe with all the transactions in the file.
-# For each balance and transaction the related statement will be designated by AccountId column
+camt = Camt053(file_name) # creates an object of Camt class you need to pass path+file_name of the CAMT053 file to be processed
+camt.camt.statements_info # returns list of dictionaries for each statement with the following information: account id and owner name, all available balances (OPBD/CLBD/CLAV/PRCD/FWAV/etc.), 
+camt.transactions # returns list of all transactions in the file.
 
 ```
 

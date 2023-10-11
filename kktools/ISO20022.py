@@ -34,9 +34,11 @@ class Pain001:
     def _process_batch_header(self, batch):
         execution_date = batch.xpath('.//ReqdExctnDt')[0].text
         debtor_name = batch.xpath('.//Dbtr/Nm')[0].text
-        try:
-            debtor_account = batch.xpath('.//DbtrAcct/Id/IBAN')[0].text
-        except:
+        debtor_account = batch.xpath('.//DbtrAcct/Id/IBAN|.//DbtrAcct/Id/Othr/Id')
+
+        if len(debtor_account) > 0:
+            debtor_account = debtor_account[0].text
+        else:
             debtor_account = ''
         return {'debtor_name': debtor_name, 'debtor_account': debtor_account, 'execution_date': execution_date}
 
@@ -135,9 +137,8 @@ class Camt053:
 
         self.statements_info = self._get_stmts_info(stmt_list)
 
-        self.accounts_list = [{'account_id': stmt.xpath('./Acct/Id/IBAN|./Acct/Id/Othr/Id')[0].text,
-                               'account_owner': stmt.xpath('./Acct/Nm')[0].text}
-                              for stmt in stmt_list]
+        self.accounts_list = [{'Account_id': stmt['Account_id'],
+                               'Account_owner': stmt['Account_owner']} for stmt in self.statements_info]
 
         self.transactions = self._get_transactions(stmt_list)
 
@@ -149,11 +150,17 @@ class Camt053:
 
     def _stmt_header_main(self, stmt):
         account_id = stmt.xpath('./Acct/Id/IBAN|./Acct/Id/Othr/Id')[0].text
-        name = stmt.xpath('./Acct/Nm')[0].text
+
+        name = stmt.xpath('./Acct/Nm')
+        if len(name) > 0:
+            name = stmt.xpath('./Acct/Nm')[0].text
+        else:
+            name = ''
+
         stmt_id = stmt.xpath('./Id')[0].text
         stmt_header_main = {'Statement_id': stmt_id,
                             'Account_id': account_id,
-                            'Name': name}
+                            'Account_owner': name}
         return stmt_header_main
 
     def _get_stmts_info(self, stmt_list):
@@ -274,7 +281,7 @@ class Camt053:
             entry_dict = {
                 'Amount': Amount,
                 'Currency': Currency,
-                'Dr/Cr': CdtDbtInd,
+                'Dr_Cr': CdtDbtInd,
                 'Debtor': Debtor,
                 'DebtorAccount': DebtorAccount,
                 'Creditor': Creditor,
