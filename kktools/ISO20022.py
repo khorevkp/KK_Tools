@@ -57,6 +57,13 @@ class Pain001:
 
             name = payment.xpath('.//Cdtr/Nm')[0].text
 
+            creditor_account = payment.xpath('.//CdtrAcct/Id/IBAN|.//CdtrAcct/Id/Othr/Id')
+
+            if len(creditor_account) > 0:
+                creditor_account = creditor_account[0].text
+            else:
+                creditor_account = ''
+
             country = payment.xpath('.//Ctry')
 
             if len(country) > 0:
@@ -81,6 +88,7 @@ class Pain001:
                 'Amount': float(amount),
                 'Currency': currency,
                 'Reference': reference,
+                'Creditor_account': creditor_account,
                 'Country': country,
                 'Address': address
             }
