@@ -1,6 +1,7 @@
 from lxml import etree
 import pandas as pd
 import os
+import re
 
 
 class Pain001:
@@ -13,9 +14,7 @@ class Pain001:
             print(f"File {file_name} not found!")
             raise
 
-        data = data.replace(
-            ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"',
-            '')
+        data = re.sub('<Document[\S\s]*?>', '<Document>', data)
         data = bytes(data, 'utf-8')
         parser = etree.XMLParser(recover=True, encoding='utf-8')
         self._tree = etree.fromstring(data, parser)
