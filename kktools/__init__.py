@@ -1,3 +1,9 @@
-from .core import df_to_excel, get_ecb_rates, get_last_ecb_rates, dfs_to_excel, Camt
-from .ISO20022 import *
-__doc__ = """kktools package provides useful tools for finance and treasury specialists"""
+"""
+kktools package provides useful tools for finance and treasury specialists.
+
+This package includes modules for parsing bank statements in various formats,
+as well as other utilities commonly used in finance and treasury operations.
+"""
+
+from .camt_parser import CamtParser
+from .bank_statement_parsers import *
