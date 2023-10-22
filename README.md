@@ -80,8 +80,20 @@ python cli.py --type <file_type> --input <input_file> [--output <output_file>]
    python cli.py --type camt --input path/to/camt/file.xml
    ```
 
+   Using the test data:
+
+   ```bash
+   python ./kktools/cli.py --type camt --input ./tests/test_data/camt.053.001.02.xml
+   ```
+
 2. Parse a CAMT file and save the results to a CSV file:
 
    ```bash
    python cli.py --type camt --input path/to/camt/file.xml --output path/to/output/file.csv
+   ```
+
+   Using the test data:
+
+   ```bash
+   python ./kktools/cli.py --type camt --input ./tests/test_data/camt.053.001.02.xml --output ./tests/test_data/file.csv
    ```
