@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='kktools',
-    version='3.6.1',  # Consider updating the version number
+    version='3.6.1',
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',
@@ -17,7 +17,7 @@ setup(
         'pandas>=2.1.1',
         'requests>=2.31.0'
     ],
-    packages=find_packages(),  # Automatically discover all packages in your project
+    packages=find_packages(),
     long_description=long_description,
     long_description_content_type='text/markdown',
     classifiers=[
@@ -30,5 +30,8 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    python_requires='>=3.6',  # Specify minimum Python version
+    python_requires='>=3.6',
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
+    test_suite='tests',
 )
