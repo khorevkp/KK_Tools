@@ -57,3 +57,31 @@ pain_parser = Pain001Parser('path/to/pain/file.xml')
 # Parse the file and get the results
 results = pain_parser.parse()
 ```
+
+## Command Line Interface (CLI)
+
+`kktools` also provides a command line interface for parsing bank statement files.
+
+### Usage
+
+```bash
+python cli.py --type <file_type> --input <input_file> [--output <output_file>]
+```
+
+- `--type`: Type of the bank statement file. Currently supported types are "camt" and "pain001".
+- `--input`: Path to the bank statement file.
+- `--output`: (Optional) Path to save the parsed data. If not provided, data is printed to the console.
+
+### Examples
+
+1. Parse a CAMT file and print the results to the console:
+
+   ```bash
+   python cli.py --type camt --input path/to/camt/file.xml
+   ```
+
+2. Parse a CAMT file and save the results to a CSV file:
+
+   ```bash
+   python cli.py --type camt --input path/to/camt/file.xml --output path/to/output/file.csv
+   ```
