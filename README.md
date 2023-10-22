@@ -10,12 +10,20 @@
 
 # kktools
 
-A comprehensive Python library designed for finance and treasury specialists, `kktools` offers a variety of tools to streamline financial operations and data analysis. This library encompasses modules for parsing bank statements in various formats, utilities for financial calculations, and other essential functionalities commonly used in the realm of finance and treasury.
+`kktools` is a versatile and comprehensive Python library meticulously crafted for professionals in finance and treasury. It stands out as an indispensable toolkit, aiming to simplify complex financial operations and enhance data analysis precision.
 
-## Features
+## Key Features
 
-- **Bank Statement Parsing**: Parse bank statements in various formats including CAMT and PAIN.
-- **Financial Utilities**: Utilize a suite of tools tailored for financial calculations and data processing.
+- **Bank Statement Parsing**: Supports multiple formats, including the widely-used CAMT (ISO 20022), ensuring seamless integration with various banking systems.
+- **Financial Calculations**: Offers a suite of utilities for accurate and efficient financial calculations, catering to the unique needs of financial analysis.
+- **Data Analysis**: Facilitates in-depth analysis of financial data, helping users derive meaningful insights and make informed decisions.
+- **User-Friendly CLI**: Comes with a command-line interface, allowing for easy integration into existing workflows and automation of routine tasks.
+
+## Why kktools
+
+- **Tailored for Finance**: Every module and function is designed with the specific requirements of finance and treasury professionals in mind, ensuring relevance and efficacy.
+- **Streamlined Operations**: Aims to reduce the complexity of financial data handling, turning cumbersome tasks into straightforward processes.
+- **Community-Driven**: Actively developed and supported by a community of finance and treasury specialists, ensuring continuous improvement and adaptation to the industry’s evolving needs.
 
 ## Installation
 

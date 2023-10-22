@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "kktools"
+version = "3.6.1"
+description = "A comprehensive toolkit for finance and treasury specialists, featuring robust parsers for bank statements in CAMT (ISO 20022) format, enabling seamless processing and analysis of financial transactions."
+
+authors = ["Konstantin Khorev <khorevkp@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/khorevkp/KK_Tools"
+homepage = "https://github.com/khorevkp/KK_Tools"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+lxml = "^4.9.3"
+openpyxl = "^3.1.2"
+pandas = "^2.1.1"
+requests = "^2.31.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 72
+target-version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 72
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+known_first_party = "kktools"
+
+[tool.pytest]
+addopts = "--cov=kktools --cov-report=term-missing --cov-report=xml --cov-report=html --cov-fail-under=100"
+testpaths = "tests"

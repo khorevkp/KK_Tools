@@ -9,7 +9,7 @@ setup(
     version='3.6.1',
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
-    description='Tools for finance and treasury specialists',
+    description='A comprehensive toolkit for finance and treasury specialists, featuring robust parsers for bank statements in CAMT (ISO 20022) format, enabling seamless processing and analysis of financial transactions.',
     url='https://github.com/khorevkp/KK_Tools',
     install_requires=[
         'lxml>=4.9.3',
