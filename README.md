@@ -1,42 +1,59 @@
+<!-- markdownlint-disable MD033 MD041 -->
+
+<img
+    src="https://kura.pro/kktools/images/logo/kktools.webp"
+    alt="KKTools logo"
+    width="261"
+    align="right" />
+
+<!-- markdownlint-enable MD033 MD041 -->
+
 # kktools
 
+A comprehensive Python library designed for finance and treasury specialists, `kktools` offers a variety of tools to streamline financial operations and data analysis. This library encompasses modules for parsing bank statements in various formats, utilities for financial calculations, and other essential functionalities commonly used in the realm of finance and treasury.
 
-========
+## Features
 
-This library provides python tools for finance and treasury specialists.
+- **Bank Statement Parsing**: Parse bank statements in various formats including CAMT and PAIN.
+- **Financial Utilities**: Utilize a suite of tools tailored for financial calculations and data processing.
 
 ## Installation
 
-`pip install kktools`
+To install `kktools`, run the following command:
+
+```bash
+pip install kktools
+```
 
 ## Realized Functionality
-`get_ecb_rates("CUR", "YYYY-MM-DD")` - returns pandas dataframe with historical values for a given currency ("CUR") starting from the given date.<br>
-`get_last_ecb_rates()` - returns pandas dataframe with the latest valid ECB exchange rates for all published currencies.<br>
-`df_to_excel("file_name.xlsx", dataframe)` - exports pandas dataframe to an excel file with pretty formatting.<br>
-`dfs_to_excel("file_name.xlsx", list_of_dataframes)` - exports list of pandas dataframes to an excel file with pretty formatting.<br>
-`Camt053` - class for parsing CAMT053 files (EOD bank statements, ISO20022 standard).<br>
-`Pain001` - class for parsing PAIN001 files (payment initiation, ISO20022 standard).
+
+### Bank Statement Parsers
+
+- `CamtParser`: Class for parsing CAMT format bank statement files.
+- `Pain001Parser`: Class for parsing SEPA PAIN.001 credit transfer files.
 
 ## Basic Usage
 
-Importing history of EUR/GBP exchange rates since 2000-01-01 and exporting it to an excel file with pretty formatting
+### Parsing CAMT Files
 
-```
-import kktools as kkt
+```python
+from kktools import CamtParser
 
-df = kkt.get_ecb_rates("GBP", "2000-01-01")
-kkt.df_to_excel("Historical_Rates.xlsx", df)
-```
+# Initialize the parser with the CAMT file path
+camt_parser = CamtParser('path/to/camt/file.xml')
 
-Parsing CAMT053 file and getting list of balances and list of all transactions:
-```
-from kktools import Camt053
-
-camt = Camt053(file_name) # creates an object of Camt class you need to pass path+file_name of the CAMT053 file to be processed
-camt.camt.statements_info # returns list of dictionaries for each statement with the following information: account id and owner name, all available balances (OPBD/CLBD/CLAV/PRCD/FWAV/etc.), 
-camt.transactions # returns list of all transactions in the file.
-
+# Parse the file and get the results
+results = camt_parser.parse()
 ```
 
-### License
-MIT licensed. Check the [`LICENSE`](https://github.com/khorevkp/KK_Tools/blob/master/LICENSE) file for full details.
+### Parsing PAIN.001 Files
+
+```python
+from kktools import Pain001Parser
+
+# Initialize the parser with the PAIN.001 file path
+pain_parser = Pain001Parser('path/to/pain/file.xml')
+
+# Parse the file and get the results
+results = pain_parser.parse()
+```

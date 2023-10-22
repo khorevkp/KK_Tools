@@ -77,3 +77,4 @@ celerybeat-schedule
 *.pot              # Translations
 *.db-shm           # Database
 *.db-wal           # Database
+.DS_Store
