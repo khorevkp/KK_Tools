@@ -8,7 +8,7 @@ class Pain001:
     def __init__(self, file_name):
 
         try:
-            with open(file_name, 'r') as file:
+            with open(file_name, 'r', encoding='utf-8-sig') as file:
                 data = file.read()
         except FileNotFoundError:
             print(f"File {file_name} not found!")
@@ -83,6 +83,18 @@ class Pain001:
                 address += addr.text
                 address += ' '
 
+            end_to_end = payment.xpath('.//EndToEndId')
+            if len(end_to_end) > 0:
+                end_to_end = end_to_end[0].text
+            else:
+                end_to_end = ''
+
+            BIC = payment.xpath('.//BIC')
+            if len(BIC) > 0:
+                BIC = BIC[0].text
+            else:
+                BIC = ''
+
             payment_dict = {
                 'Name': name,
                 'Amount': float(amount),
@@ -90,7 +102,9 @@ class Pain001:
                 'Reference': reference,
                 'Creditor_account': creditor_account,
                 'Country': country,
-                'Address': address
+                'Address': address,
+                'BIC': BIC,
+                'EndToEndId': end_to_end
             }
 
             # adding to each individual batch header batch information (about payer and execution date)
