@@ -124,7 +124,6 @@ class InvalidCamt53Exception(Exception):
     """Raised when file provided is not a valid CAMT 053 file"""
     pass
 
-
 class Camt053:
     def __init__(self, file_name):
 
@@ -282,6 +281,13 @@ class Camt053:
                 for ref in refs:
                     Reference += ref.text
 
+            AddInfo = ''
+
+            refs = entry.xpath('.//AddtlNtryInf')
+            if len(refs) > 0:
+                for ref in refs:
+                    AddInfo += ref.text
+
             Amount = entry.xpath('./Amt')[0].text
             Amount = float(Amount)
             Currency = entry.xpath('./Amt/@Ccy')[0]
@@ -308,6 +314,7 @@ class Camt053:
                 'Creditor': Creditor,
                 'CreditorAccount': CreditorAccount,
                 'Reference': Reference,
+                'AddInfo': AddInfo,
                 'ValDt': ValDt,
                 'BookgDt': BookgDt
             }
