@@ -275,18 +275,18 @@ class Camt053:
                 CreditorAccount = ''
 
             Reference = ''
-
             refs = entry.xpath('.//Ustrd')
             if len(refs) > 0:
                 for ref in refs:
-                    Reference += ref.text
+                    if ref.text is not None:
+                        Reference += ref.text
 
             AddInfo = ''
-
             refs = entry.xpath('.//AddtlNtryInf')
             if len(refs) > 0:
                 for ref in refs:
-                    AddInfo += ref.text
+                    if ref.text is not None:
+                        AddInfo += ref.text
 
             Amount = entry.xpath('./Amt')[0].text
             Amount = float(Amount)
