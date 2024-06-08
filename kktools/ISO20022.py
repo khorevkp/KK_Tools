@@ -142,7 +142,7 @@ class Camt053:
             print(f"File {file_name} not found!")
             raise
 
-        data = data.replace(' xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"', '')
+        data = re.sub('<Document[\S\s]*?>', '<Document>', data)
         data = bytes(data, 'utf-8')
         try:
             parser = etree.XMLParser(recover=True, encoding='utf-8')
