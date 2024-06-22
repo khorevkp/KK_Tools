@@ -254,7 +254,11 @@ class Camt053:
             if len(nm) > 0:
                 Debtor = nm[0].text
             else:
-                Debtor = ''
+                nm = entry.xpath('.//Dbtr/Pty/Nm')
+                if len(nm) > 0:
+                    Debtor = nm[0].text
+                else:
+                    Debtor = ''
 
             acct = entry.xpath('.//DbtrAcct/Id/IBAN|.//DbtrAcct/Id/Othr/Id')
             if len(acct) > 0:
@@ -266,7 +270,11 @@ class Camt053:
             if len(nm) > 0:
                 Creditor = nm[0].text
             else:
-                Creditor = ''
+                nm = entry.xpath('.//Cdtr/Pty/Nm')
+                if len(nm) > 0:
+                    Creditor = nm[0].text
+                else:
+                    Creditor = ''
 
             acct = entry.xpath('.//CdtrAcct/Id/IBAN|.//CdtrAcct/Id/Othr/Id')
             if len(acct) > 0:
