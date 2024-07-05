@@ -33,13 +33,27 @@ class Pain001:
     def _process_batch_header(self, batch):
         execution_date = batch.xpath('.//ReqdExctnDt')[0].text
         debtor_name = batch.xpath('.//Dbtr/Nm')[0].text
-        debtor_account = batch.xpath('.//DbtrAcct/Id/IBAN|.//DbtrAcct/Id/Othr/Id')
 
+        debtor_account = batch.xpath('.//DbtrAcct/Id/IBAN|.//DbtrAcct/Id/Othr/Id')
         if len(debtor_account) > 0:
             debtor_account = debtor_account[0].text
         else:
             debtor_account = ''
-        return {'debtor_name': debtor_name, 'debtor_account': debtor_account, 'execution_date': execution_date}
+
+        PmtInfId = batch.xpath('.//PmtInfId')
+        if len(PmtInfId) > 0:
+            PmtInfId = PmtInfId[0].text
+        else:
+            PmtInfId = ''
+
+        batch_header = {
+                        'PmtInfId': PmtInfId,
+                        'debtor_name': debtor_name,
+                        'debtor_account': debtor_account,
+                        'execution_date': execution_date
+                        }
+
+        return batch_header
 
     def _get_payments_per_batch(self, batch):
 
@@ -83,6 +97,12 @@ class Pain001:
                 address += addr.text
                 address += ' '
 
+            InstrId = payment.xpath('.//InstrId')
+            if len(InstrId) > 0:
+                InstrId = InstrId[0].text
+            else:
+                InstrId = ''
+
             end_to_end = payment.xpath('.//EndToEndId')
             if len(end_to_end) > 0:
                 end_to_end = end_to_end[0].text
@@ -104,7 +124,8 @@ class Pain001:
                 'Country': country,
                 'Address': address,
                 'BIC': BIC,
-                'EndToEndId': end_to_end
+                'EndToEndId': end_to_end,
+                'InstrId': InstrId
             }
 
             # adding to each individual batch header batch information (about payer and execution date)
