@@ -3,6 +3,13 @@ import pandas as pd
 import os
 import re
 
+def get_tag_text(tree_el, addr):
+    tags = tree_el[0].xpath('./' + addr)
+    if len(tags) > 0:
+        tag_text = tags[0].text
+    else:
+        tag_text = ''
+    return tag_text
 
 class Pain001:
     def __init__(self, file_name):
@@ -145,6 +152,7 @@ class InvalidCamt53Exception(Exception):
     """Raised when file provided is not a valid CAMT 053 file"""
     pass
 
+
 class Camt053:
     def __init__(self, file_name):
 
@@ -271,6 +279,22 @@ class Camt053:
         entries_list = []
 
         for entry in entries:
+
+            BkTxCd = entry.xpath('.//BkTxCd')
+
+            if len(BkTxCd) > 0:
+                Domn_Cd = get_tag_text(BkTxCd, 'Domn/Cd')
+                Fmly_Cd = get_tag_text(BkTxCd, 'Domn/Fmly/Cd')
+                SubFmly_Cd = get_tag_text(BkTxCd, 'Domn/Fmly/SubFmlyCd')
+                Prtry_Cd = get_tag_text(BkTxCd, 'Prtry/Cd')
+                Prtry_Issr = get_tag_text(BkTxCd, 'Prtry/Issr')
+            else:
+                Domn_Cd = ""
+                Fmly_Cd = ""
+                SubFmly_Cd = ""
+                Prtry_Cd = ""
+                Prtry_Issr = ""
+
             nm = entry.xpath('.//Dbtr/Nm')
             if len(nm) > 0:
                 Debtor = nm[0].text
@@ -344,6 +368,11 @@ class Camt053:
                 'CreditorAccount': CreditorAccount,
                 'Reference': Reference,
                 'AddInfo': AddInfo,
+                'Domn_Cd': Domn_Cd,
+                'Fmly_Cd': Fmly_Cd,
+                'SubFmly_Cd': SubFmly_Cd,
+                'Prtry_Cd': Prtry_Cd,
+                'Prtry_Issr': Prtry_Issr,
                 'ValDt': ValDt,
                 'BookgDt': BookgDt
             }
@@ -359,7 +388,6 @@ class Camt053:
         file_info += f'Number of statements in the file: {len(self.statements_info)} \n'
         file_info += f'Total number of transactions: {len(self.transactions)}'
         return str(file_info)
-
 
 def process_CAMT053_folder(folder_CAMT53):
     df_files = []
