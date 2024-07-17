@@ -3,6 +3,14 @@ import pandas as pd
 import os
 import re
 
+def get_tag_text2(tree_el, addr):
+    tags = tree_el.xpath('.//' + addr)
+    if len(tags) > 0:
+        tag_text = tags[0].text
+    else:
+        tag_text = ''
+    return tag_text
+
 def get_tag_text(tree_el, addr):
     tags = tree_el[0].xpath('./' + addr)
     if len(tags) > 0:
@@ -190,6 +198,30 @@ class Camt053:
                                'Account_owner': stmt['Account_owner']} for stmt in self.statements_info]
 
         self.transactions = self._get_transactions(stmt_list)
+
+    def get_balances(self):
+        df_balances = pd.DataFrame(self.statements_info)
+
+        if len(df_balances) > 0:
+            if 'Amount_PRCD' in df_balances.columns:
+                if 'Amount_OPBD' in df_balances.columns:
+                    df_balances['Amount_OPBD'].fillna(df_balances['Amount_PRCD'], inplace=True)
+                else:
+                    df_balances['Amount_OPBD'] = df_balances['Amount_PRCD']
+            try:
+                df_balances['Date_CLBD'] = pd.to_datetime(df_balances['Date_CLBD'], format='%Y-%m-%d')
+                cols = ['Statement_id', 'Account_id', 'Currency_CLBD', 'Amount_OPBD', 'Amount_CLBD', 'Date_CLBD',
+                        'transaction_count', 'total_amount']
+                df_balances = df_balances[cols]
+                cols = ['Statement_id', 'Account_id', 'Currency', 'Opening_Balance', 'Closing_Balance', 'Date',
+                        'transaction_count', 'total_amount']
+                df_balances.columns = cols
+            except:
+                print("Error")
+                pass
+
+        return df_balances
+
 
     def _process_stmt_header(self, stmt):
         stmt_header = self._stmt_header_main(stmt)
@@ -432,3 +464,205 @@ def process_CAMT053_folder(folder_CAMT53):
     df_statements = df_statements.drop(axis='columns', labels=cols_to_drop, errors='ignore')
 
     return df_files, df_statements, df_transactions
+
+
+class Camt052:
+
+    def __init__(self, file_name):
+
+        self.DEFINITIONS = {'OPBD': 'Opening Booked balance',
+                            'OPAV': 'Opening Available balance',
+                            'CLBD': 'Closing Booked balance',
+                            'CLAV': 'Closing Available balance',
+                            'PRCD': 'Previously Closed Booked balance',
+                            'FWAV': 'Forward Available balance'}
+
+        try:
+            with open(file_name, 'r') as file:
+                data = file.read()
+
+        except FileNotFoundError as e:
+            print(f"File {file_name} not found!")
+            raise
+
+        data = re.sub('<Document[\S\s]*?>', '<Document>', data)
+        data = bytes(data, 'utf-8')
+        parser = etree.XMLParser(recover=True, encoding='utf-8')
+        self.tree = etree.fromstring(data, parser)
+        self.report = self.tree.xpath('.//Rpt')[0]
+        self.account_id = self.report.xpath('./Acct/Id/IBAN|./Acct/Id/Othr/Id')[0].text
+        self.owner = self.tree.xpath('.//MsgRcpt/Nm')[0].text
+
+    def get_transactions(self):
+        entries = self.tree.xpath('.//Ntry')
+        entries_list = []
+
+        for entry in entries:
+            Debtor = get_tag_text2(entry, 'Dbtr/Nm')
+            acct = entry.xpath('.//DbtrAcct/Id/IBAN|.//DbtrAcct/Id/Othr/Id')
+
+            if len(acct) > 0:
+                DebtorAccount = acct[0].text
+            else:
+                DebtorAccount = ''
+
+            Creditor = get_tag_text2(entry, 'Cdtr/Nm')
+            acct = entry.xpath('.//CdtrAcct/Id/IBAN|.//CdtrAcct/Id/Othr/Id')
+
+            if len(acct) > 0:
+                CreditorAccount = acct[0].text
+            else:
+                CreditorAccount = ''
+
+            Reference = ''
+            refs = entry.xpath('.//Ustrd')
+
+            if len(refs) > 0:
+                for ref in refs:
+                    Reference += ref.text
+
+            Amount = entry.xpath('./Amt')[0].text
+            Amount = float(Amount)
+            Currency = entry.xpath('./Amt/@Ccy')[0]
+            CdtDbtInd = entry.xpath('./CdtDbtInd')[0].text
+
+            if CdtDbtInd == 'DBIT':
+                Amount = -Amount
+
+            try:
+                ValDt = entry.xpath('./ValDt/Dt')[0].text
+            except:
+                ValDt = ''
+
+            try:
+                BookgDt = entry.xpath('./BookgDt/Dt')[0].text
+            except:
+                BookgDt = ''
+
+            entry_dict = {
+                'Owner': self.owner,
+                'Account': self.account_id,
+                'Amount': Amount,
+                'Currency': Currency,
+                'Dr/Cr': CdtDbtInd,
+                'Debtor': Debtor,
+                'DebtorAccount': DebtorAccount,
+                'Creditor': Creditor,
+                'CreditorAccount': CreditorAccount,
+                'Reference': Reference,
+                'ValDt': ValDt,
+                'BookgDt': BookgDt
+
+            }
+
+            entries_list.append(entry_dict)
+
+        return pd.DataFrame.from_dict(entries_list)
+
+    def get_balances(self):
+        bals = self.tree.xpath('.//Bal')
+        bals_all = {}
+
+        for bal in bals:
+            Code = bal.xpath('.//Cd')[0].text
+            try:
+                Description = self.DEFINITIONS[Code]
+            except:
+                Description = 'Unknown code'
+
+            amount = bal.xpath('.//Amt')[0].text
+            amount = float(amount)
+            CdtDbtInd = bal.xpath('.//CdtDbtInd')[0].text
+            Currency = bal.xpath('.//Amt/@Ccy')[0]
+            Date = bal.xpath('./Dt/Dt|./Dt/DtTm')[0].text
+
+            if CdtDbtInd == 'DBIT':
+                amount = -amount
+
+            bal_dict = {'Amount_' + Code: amount,
+                        'Currency_' + Code: Currency,
+                        'Code_' + Code: Code,
+                        'Description_' + Code: Description,
+                        'CdtDbtInd_' + Code: CdtDbtInd,
+                        'Date_' + Code: Date}
+            bals_all.update(bal_dict)
+        x = []
+        if len(bals_all) > 0:
+            x.append(bals_all)
+        return x
+
+    def get_stats(self):
+        pass
+
+    def __str__(self):
+        return str(self.get_stats())
+
+
+def process_folder2(folder, initial_set=set()):
+    df_files = []
+    df_duplicates = []
+    df_statements = pd.DataFrame()
+    df_balances = pd.DataFrame()
+    df_transactions = pd.DataFrame()
+
+    for file_path in os.listdir(folder):
+        full_path = os.path.join(folder, file_path)
+        if os.path.isfile(full_path):
+            if file_path.endswith('.xml'):
+                try:
+                    camt = Camt053(full_path)
+
+                    df_stmts_temp = pd.DataFrame(camt.statements_info)
+                    df_stmts_temp['file_name'] = file_path
+
+                    df_trans_temp = pd.DataFrame(camt.transactions)
+
+                    df_balances_temp = camt.get_balances()
+
+                    new_set = set(df_stmts_temp['Statement_id'])
+                    intersection_set = new_set & initial_set
+                    new_set_to_use = new_set - initial_set
+
+                    initial_set = initial_set | new_set
+
+                    file_dict = {'file': file_path,
+                                 'account_id': camt.accounts_list,
+                                 'status': 'CAMT053 parsing successful'}
+
+                    if len(intersection_set) > 0:
+                        df_duplicates.append({'file_name:': file_path, 'new_stmts': new_set_to_use})
+                        file_dict = {'file': file_path,
+                                     'account_id': camt.accounts_list,
+                                     'status': 'CAMT053 parsing successful, but it is duplicate'}
+
+                    filter = df_stmts_temp['Statement_id'].isin(new_set_to_use)
+                    df_stmts_temp = df_stmts_temp[filter]
+
+                    filter = df_balances_temp['Statement_id'].isin(new_set_to_use)
+                    df_balances_temp = df_balances_temp[filter]
+
+                    if len(df_trans_temp) > 0:
+                        filter = df_trans_temp['Statement_id'].isin(new_set_to_use)
+                        df_trans_temp = df_trans_temp[filter]
+
+                    df_statements = pd.concat([df_statements, df_stmts_temp])
+                    df_transactions = pd.concat([df_transactions, df_trans_temp])
+                    df_balances = pd.concat([df_balances, df_balances_temp])
+
+                    df_files.append(file_dict)
+
+                except Exception as e:
+                    file_dict = {'file': file_path,
+                                 'account_id': '',
+                                 'status': f'CAMT053 parsing not successful, reason: {e}'}
+                    print("Could not process as CAMT053 file: ", file_path, f'reason: {e}')
+                    df_files.append(file_dict)
+
+    df_files = pd.DataFrame(df_files)
+    df_duplicates = pd.DataFrame(df_duplicates)
+
+    if len(df_transactions) > 0:
+        df_transactions['ValDt'] = pd.to_datetime(df_transactions['ValDt'], format='%Y-%m-%d')
+        df_transactions['BookgDt'] = pd.to_datetime(df_transactions['BookgDt'], format='%Y-%m-%d')
+
+    return df_files, df_statements, df_balances, df_transactions, df_duplicates
