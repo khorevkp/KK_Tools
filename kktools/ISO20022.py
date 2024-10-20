@@ -390,6 +390,26 @@ class Camt053:
             except:
                 BookgDt = ''
 
+            try:
+                InstrId = entry.xpath('./NtryDtls/TxDtls/Refs/InstrId')[0].text
+            except:
+                InstrId = ''
+
+            try:
+                PmtInfId = entry.xpath('./NtryDtls/TxDtls/Refs/PmtInfId')[0].text
+            except:
+                PmtInfId = ''
+
+            try:
+                EndToEndId = entry.xpath('./NtryDtls/TxDtls/Refs/EndToEndId')[0].text
+            except:
+                EndToEndId = ''
+
+            try:
+                AcctSvcrRef = entry.xpath('./AcctSvcrRef')[0].text
+            except:
+                AcctSvcrRef = ''
+
             entry_dict = {
                 'Amount': Amount,
                 'Currency': Currency,
@@ -406,7 +426,11 @@ class Camt053:
                 'Prtry_Cd': Prtry_Cd,
                 'Prtry_Issr': Prtry_Issr,
                 'ValDt': ValDt,
-                'BookgDt': BookgDt
+                'BookgDt': BookgDt,
+                'InstrId': InstrId,
+                'PmtInfId': PmtInfId,
+                'EndToEndId': EndToEndId,
+                'AcctSvcrRef': AcctSvcrRef
             }
             entry_dict.update(stmt_header_main)
 
