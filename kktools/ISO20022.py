@@ -406,6 +406,11 @@ class Camt053:
                 EndToEndId = ''
 
             try:
+                AddtlTxInf = entry.xpath('./NtryDtls/TxDtls/AddtlTxInf')[0].text
+            except:
+                AddtlTxInf = ''
+
+            try:
                 AcctSvcrRef = entry.xpath('./AcctSvcrRef')[0].text
             except:
                 AcctSvcrRef = ''
@@ -420,6 +425,7 @@ class Camt053:
                 'CreditorAccount': CreditorAccount,
                 'Reference': Reference,
                 'AddInfo': AddInfo,
+                'AddtlTxInf': AddtlTxInf,
                 'Domn_Cd': Domn_Cd,
                 'Fmly_Cd': Fmly_Cd,
                 'SubFmly_Cd': SubFmly_Cd,
