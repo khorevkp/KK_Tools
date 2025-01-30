@@ -37,7 +37,6 @@ def get_ecb_rates(currency, start_period):
 
     return df
 
-
 def get_last_ecb_rates():
     # please see description of request structure here: https://sdw-wsrest.ecb.europa.eu/help/
 

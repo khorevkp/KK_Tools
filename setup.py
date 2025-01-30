@@ -5,12 +5,12 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='kktools',
-    version='4.27',
+    version='4.28',
     author='Konstantin Khorev',
     author_email='khorevkp@gmail.com',
     description='Tools for finance and treasury specialists',
     url='https://github.com/khorevkp/KK_Tools',
-    install_requires=['pandas', 'requests', 'lxml', ],
+    install_requires=['pandas', 'requests', 'lxml', 'xlsxwriter', 'openpyxl', ],
     packages=['kktools'],
     long_description=long_description,
     long_description_content_type='text/markdown'
